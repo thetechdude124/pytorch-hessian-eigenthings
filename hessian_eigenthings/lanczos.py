@@ -81,6 +81,10 @@ def lanczos(
         out = operator.apply(x)
         out = utils.maybe_fp16(out, fp16)
         out = out.cpu().numpy()
+        #Remove x from cuda to save GPU usage
+        if use_gpu:
+            del x
+            torch.cuda.empty_cache()
         return out
 
     scipy_op = ScipyLinearOperator(shape, _scipy_apply)
